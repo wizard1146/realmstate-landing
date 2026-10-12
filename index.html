@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Realmstate</title>
+<meta name="description" content="Realmstate: a tick-based kingdom strategy game of realms, states and houses. The alpha test is open: register now.">
+<meta property="og:title" content="Realmstate">
+<meta property="og:description" content="A tick-based kingdom strategy game of realms, states and houses. Alpha test: register now.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Realmstate's front door: the age's countdown, the way in, and what the game is. */
+:root {
+  --bg: #f3eee2; --bg2: #ebe3d0; --panel: #fbf8f0; --ink: #221e16; --muted: #625b48; --line: #d8ccb0;
+  --accent: #7a5a1c; --accent-ink: #fbf8f0; --glow: #c99a3a; --good: #3d6b42; --warn: #8a5a12;
+  --display: "Cormorant Garamond", Georgia, "Iowan Old Style", serif;
+  --body: Inter, -apple-system, "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12100c; --bg2: #1a1712; --panel: #1d1a14; --ink: #efe8d6; --muted: #aea58c; --line: #3a3427;
+    --accent: #e0bb68; --accent-ink: #15120d; --glow: #e8b75a; --good: #8fc792; --warn: #e5b45c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12100c; --bg2: #1a1712; --panel: #1d1a14; --ink: #efe8d6; --muted: #aea58c; --line: #3a3427;
+  --accent: #e0bb68; --accent-ink: #15120d; --glow: #e8b75a; --good: #8fc792; --warn: #e5b45c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); overflow-x: hidden; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 16px; }
+
+/* The hero: a night sky over the realms. */
+.hero { position: relative; isolation: isolate; text-align: center; padding: clamp(3.5rem, 12vh, 7rem) 0 3.5rem; border-bottom: 1px solid var(--line);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--glow) 22%, transparent), transparent 70%), linear-gradient(var(--bg2), var(--bg)); }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; z-index: -1; opacity: .5;
+  background: linear-gradient(transparent, var(--bg)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 90V60l60-20 40 14 60-34 50 28 40-16 70 30 50-40 60 36 40-12 50 24 60-44 50 34 40-10 60 30 50-26 70 32 40-18 60 20 50-30 60 26 40-8 80 22V90z' fill='%23887150' fill-opacity='.35'/%3E%3C/svg%3E") bottom/100% 100% no-repeat; }
+.eyebrow { font-size: .78rem; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
+h1 { font: 600 clamp(3.2rem, 13vw, 6.4rem)/1 var(--display); letter-spacing: .02em; margin: 0; }
+.tagline { font: 500 clamp(1.15rem, 3.6vw, 1.5rem)/1.4 var(--display); color: var(--muted); max-width: 34rem; margin: .8rem auto 0; }
+.phase { display: inline-flex; align-items: center; gap: .5rem; margin: 2rem 0 .3rem; padding: .3rem .95rem; border: 1px solid currentColor; border-radius: 999px;
+  color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.phase::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; animation: pulse 2s ease-in-out infinite; }
+.phase.live { color: var(--good); } .phase.off { color: var(--muted); } .phase.off::before { animation: none; }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .phase::before { animation: none; } }
+.lead { color: var(--muted); margin: .4rem 0 1.1rem; }
+.clock { display: flex; justify-content: center; gap: clamp(.4rem, 2.5vw, 1rem); margin: 0 0 .7rem; }
+.clock div { min-width: clamp(4.1rem, 19vw, 6.4rem); padding: .7rem .3rem .55rem; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--glow) 25%, transparent) inset, 0 8px 24px -16px rgba(0,0,0,.45); }
+.clock b { display: block; font: 600 clamp(2rem, 9vw, 3.4rem)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.clock span { display: block; margin-top: .35rem; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.when { color: var(--muted); font-size: .95rem; margin: 0 0 1.8rem; min-height: 1.5em; }
+.cta { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; }
+.button { display: inline-block; font: 600 1rem/1 var(--body); padding: .95rem 1.6rem; border-radius: 10px; text-decoration: none; border: 1px solid var(--accent); color: var(--ink); background: transparent; }
+.button.primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 28px -14px var(--glow); }
+.button:hover { filter: brightness(1.06); }
+.note { color: var(--muted); font-size: .9rem; margin: 1rem 0 0; min-height: 1.4em; }
+
+/* Facts and sections. */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .8rem; margin: 2.5rem 0 0; }
+.fact { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; }
+.fact b { display: block; font: 600 1.45rem/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.fact span { color: var(--muted); font-size: .85rem; }
+section { padding: 3.2rem 0 0; }
+h2 { font: 600 clamp(1.8rem, 5vw, 2.4rem)/1.15 var(--display); margin: 0 0 1.2rem; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; padding: 0; margin: 0; list-style: none; counter-reset: step; }
+.steps li { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem 1.1rem 3.4rem; counter-increment: step; }
+.steps li::before { content: counter(step); position: absolute; left: 1.1rem; top: 1rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center;
+  font: 600 .85rem var(--body); color: var(--accent-ink); background: var(--accent); }
+.steps b { display: block; margin-bottom: .2rem; }
+.steps p, .own p { margin: 0; color: var(--muted); }
+.own { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1.4rem 1.5rem; display: grid; gap: 1rem; grid-template-columns: 1fr auto; align-items: center; }
+.own h2 { margin-bottom: .4rem; }
+@media (max-width: 40rem) { .own { grid-template-columns: 1fr; } }
+footer { margin: 4rem 0 0; padding: 1.6rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+footer .wrap { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content: space-between; }
+footer nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Alpha test</p>
+    <h1>Realmstate</h1>
+    <p class="tagline">A tick-based strategy game of realms, states and houses. Found a house, join a state, and grow, trade and fight with everyone else, a tick at a time.</p>
+
+    <div class="phase off" id="phase" role="status">Checking the game…</div>
+    <p class="lead" id="lead"></p>
+    <div class="clock" id="clock" hidden>
+      <div><b id="d">0</b><span>days</span></div>
+      <div><b id="h">00</b><span>hours</span></div>
+      <div><b id="m">00</b><span>minutes</span></div>
+      <div><b id="s">00</b><span>seconds</span></div>
+    </div>
+    <p class="when" id="when"></p>
+    <div class="cta">
+      <a class="button primary" id="play" href="https://play.realmstate.net">Register now</a>
+      <a class="button" href="https://wizard1146.github.io/realmstate-wiki/">Read the guide</a>
+    </div>
+    <p class="note" id="note"></p>
+
+    <div class="facts" id="facts" hidden></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section aria-labelledby="how-title">
+    <h2 id="how-title">How it works</h2>
+    <ol class="steps">
+      <li><b>Found your house now</b><p>Sign in with Google, name your house, and choose a race and a personality. Each one changes how you play.</p></li>
+      <li><b>Nothing happens before the start</b><p>Your house waits safely until the countdown ends, so there's no head start to lose by joining late in registration.</p></li>
+      <li><b>The world moves in ticks</b><p>Every 5 minutes a tick falls: gold and food come in, buildings finish, armies march home. Plan between them.</p></li>
+      <li><b>Robots keep the world full</b><p>Robot houses fill the empty seats in every state. When a person joins, a robot steps aside, and robots vote for people to lead.</p></li>
+      <li><b>States choose leaders</b><p>The houses of a state vote for a leader, who sets the tax, runs the treasury and decides on war.</p></li>
+      <li><b>War and the market</b><p>Attack for land, spy, work rites, and trade the materials your realm makes for the ones it doesn't.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="own-title">
+    <div class="own">
+      <div>
+        <h2 id="own-title">Build your own front end</h2>
+        <p>The game's screens are an ordinary website that uses the same public API anyone can. Fork it, change it, host it anywhere, and play the live game with it. Nothing about the official one is special.</p>
+      </div>
+      <div class="cta" style="justify-content:flex-start">
+        <a class="button" href="https://github.com/wizard1146/realmstate-frontend">The front end's code</a>
+        <a class="button" href="https://wizard1146.github.io/realmstate-wiki/api.html">The API</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Realmstate · alpha test</span>
+    <nav aria-label="More">
+      <a href="https://play.realmstate.net" id="foot-play">Play</a>
+      <a href="https://wizard1146.github.io/realmstate-wiki/">Guide</a>
+      <a href="https://wizard1146.github.io/realmstate-wiki/changelog.html">What's new</a>
+      <a id="hall" href="https://api.realmstate.net/hall">Hall of ages</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+// The game server this page reads (its public /age). ?game=https://... points it elsewhere.
+const GAME = new URLSearchParams(location.search).get('game') || 'https://api.realmstate.net';
+const PLAY = 'https://play.realmstate.net';
+
+const $ = (id) => document.getElementById(id);
+const num = (n) => Number(n).toLocaleString();
+const pad = (n) => String(n).padStart(2, '0');
+let age = null, skew = 0, reachable = true;
+
+$('hall').href = GAME + '/hall';
+
+function when(t) {
+  return new Date(t).toLocaleString([], { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' });
+}
+
+function draw() {
+  const phase = $('phase'), play = $('play');
+  if (!age) {
+    phase.className = 'phase off';
+    phase.textContent = reachable ? 'Checking the game…' : 'The game is unreachable just now';
+    $('lead').textContent = reachable ? '' : 'Registration may still be open. Try again in a minute, or go straight to the game.';
+    $('clock').hidden = true;
+    return;
+  }
+  const now = Date.now() + skew;
+  const end = age.started_at + age.age_ticks * age.tick_ms;
+  const before = now < age.started_at;
+  const over = age.ended || now >= end;
+  const left = Math.max(0, (before ? age.started_at : end) - now);
+  $('clock').hidden = over;
+  $('d').textContent = Math.floor(left / 86400000);
+  $('h').textContent = pad(Math.floor(left / 3600000) % 24);
+  $('m').textContent = pad(Math.floor(left / 60000) % 60);
+  $('s').textContent = pad(Math.floor(left / 1000) % 60);
+  const target = age.play_url && /^https?:/.test(age.play_url) ? age.play_url : PLAY;
+  play.href = target;
+  $('foot-play').href = target;
+  if (before) {
+    phase.className = 'phase';
+    phase.textContent = 'Registration is open';
+    $('lead').textContent = `${age.name || 'The age'} begins in`;
+    $('when').textContent = `${when(age.started_at)}, your time`;
+    play.textContent = 'Register now';
+    play.hidden = false;
+  } else if (!over) {
+    phase.className = 'phase live';
+    phase.textContent = 'The age is under way';
+    $('lead').textContent = `Tick ${num(age.ticks)} of ${num(age.age_ticks)}. The age ends in`;
+    $('when').textContent = `${when(end)}, your time. You can still join: a newcomer takes a robot's seat.`;
+    play.textContent = 'Play';
+    play.hidden = false;
+  } else {
+    phase.className = 'phase off';
+    phase.textContent = 'The age has ended';
+    $('lead').innerHTML = `See how it finished in the <a href="${GAME}/hall">Hall of ages</a>. The next age is announced there.`;
+    $('when').textContent = '';
+    play.textContent = 'Play';
+  }
+}
+
+function drawFacts() {
+  if (!age) { $('facts').hidden = true; return; }
+  const mins = age.tick_ms / 60000;
+  const tick = mins >= 60 ? `${mins / 60} hour${mins === 60 ? '' : 's'}` : `${mins} minute${mins === 1 ? '' : 's'}`;
+  const days = age.age_ticks * age.tick_ms / 86400000;
+  const facts = [
+    [tick, 'a tick'],
+    [`${days >= 1 ? Math.round(days) : days.toFixed(1)} days`, `the age, ${num(age.age_ticks)} ticks`],
+    [num(age.people ?? 0), 'people have a house'],
+    [num(age.seats ?? 0), 'seats in the world'],
+  ];
+  $('facts').innerHTML = facts.map(([b, s]) => `<div class="fact"><b>${b}</b><span>${s}</span></div>`).join('');
+  $('facts').hidden = false;
+}
+
+async function refresh() {
+  try {
+    const r = await fetch(GAME + '/age', { credentials: 'omit', cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const served = Date.parse(r.headers.get('date') || '');
+    age = await r.json();
+    if (!Number.isNaN(served)) skew = served - Date.now();
+    reachable = true;
+    $('note').textContent = '';
+  } catch (e) {
+    reachable = false;
+    if (!age) $('note').textContent = '';
+  }
+  draw();
+  drawFacts();
+}
+
+refresh();
+setInterval(draw, 1000);
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
