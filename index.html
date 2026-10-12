@@ -10,87 +10,122 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rosarivo&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* Realmstate's front door: the age's countdown, the way in, and what the game is. */
+/* Realmstate's front door, in Straightline's look (the player front end's default view): Vellum by day,
+   Night Vigil by night, Rosarivo headings over Source Sans 3, and the navy-and-gold "Hegemoney: Realmstate"
+   wordmark from its menu. Colours are Straightline's --l-* tokens (realmstate-frontend views/line/line.css). */
 :root {
-  --bg: #f3eee2; --bg2: #ebe3d0; --panel: #fbf8f0; --ink: #221e16; --muted: #625b48; --line: #d8ccb0;
-  --accent: #7a5a1c; --accent-ink: #fbf8f0; --glow: #c99a3a; --good: #3d6b42; --warn: #8a5a12;
-  --display: "Cormorant Garamond", Georgia, "Iowan Old Style", serif;
-  --body: Inter, -apple-system, "Segoe UI", system-ui, sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --bg: #ede6d6; --page: #fffdf8; --ink: #26241f; --muted: #6c675d; --line: #ddd5c4; --rule: #ebe5d8;
+  --nav: #23324a; --nav-ink: #e9e4d8; --nav-muted: #9fadc2; --gold: #b8892e; --blue: #2f5d8a; --blue-ink: #ffffff;
+  --good: #2f6b3a; --frame: #b9a57c;
+  --head: Rosarivo, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12100c; --bg2: #1a1712; --panel: #1d1a14; --ink: #efe8d6; --muted: #aea58c; --line: #3a3427;
-    --accent: #e0bb68; --accent-ink: #15120d; --glow: #e8b75a; --good: #8fc792; --warn: #e5b45c; color-scheme: dark;
+    --bg: #101318; --page: #1b1f26; --ink: #e6e2d8; --muted: #a39d90; --line: #343a45; --rule: #2a2f38;
+    --nav: #0c1118; --nav-ink: #e6e2d8; --nav-muted: #8592a6; --gold: #d9ad55; --blue: #6f9fd0; --blue-ink: #0f141a;
+    --good: #8fc59a; --frame: #6c5a35; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #12100c; --bg2: #1a1712; --panel: #1d1a14; --ink: #efe8d6; --muted: #aea58c; --line: #3a3427;
-  --accent: #e0bb68; --accent-ink: #15120d; --glow: #e8b75a; --good: #8fc792; --warn: #e5b45c; color-scheme: dark;
+  --bg: #101318; --page: #1b1f26; --ink: #e6e2d8; --muted: #a39d90; --line: #343a45; --rule: #2a2f38;
+  --nav: #0c1118; --nav-ink: #e6e2d8; --nav-muted: #8592a6; --gold: #d9ad55; --blue: #6f9fd0; --blue-ink: #0f141a;
+  --good: #8fc59a; --frame: #6c5a35; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); overflow-x: hidden; }
-a { color: var(--accent); }
-:focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; border-radius: 4px; }
-.wrap { max-width: 68rem; margin: 0 auto; padding: 0 16px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
+a { color: var(--blue); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 66rem; margin: 0 auto; padding: 0 16px; }
 
-/* The hero: a night sky over the realms. */
-.hero { position: relative; isolation: isolate; text-align: center; padding: clamp(3.5rem, 12vh, 7rem) 0 3.5rem; border-bottom: 1px solid var(--line);
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--glow) 22%, transparent), transparent 70%), linear-gradient(var(--bg2), var(--bg)); }
-.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; z-index: -1; opacity: .5;
-  background: linear-gradient(transparent, var(--bg)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 90V60l60-20 40 14 60-34 50 28 40-16 70 30 50-40 60 36 40-12 50 24 60-44 50 34 40-10 60 30 50-26 70 32 40-18 60 20 50-30 60 26 40-8 80 22V90z' fill='%23887150' fill-opacity='.35'/%3E%3C/svg%3E") bottom/100% 100% no-repeat; }
-.eyebrow { font-size: .78rem; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
-h1 { font: 600 clamp(3.2rem, 13vw, 6.4rem)/1 var(--display); letter-spacing: .02em; margin: 0; }
-.tagline { font: 500 clamp(1.15rem, 3.6vw, 1.5rem)/1.4 var(--display); color: var(--muted); max-width: 34rem; margin: .8rem auto 0; }
-.phase { display: inline-flex; align-items: center; gap: .5rem; margin: 2rem 0 .3rem; padding: .3rem .95rem; border: 1px solid currentColor; border-radius: 999px;
-  color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.phase::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; animation: pulse 2s ease-in-out infinite; }
-.phase.live { color: var(--good); } .phase.off { color: var(--muted); } .phase.off::before { animation: none; }
+/* The bar, as Straightline's header: navy, a gold rule under it, the wordmark at the left. */
+.bar { background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
+.bar .wrap { display: flex; align-items: center; gap: 10px 20px; min-height: 3.2rem; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
+.brand { font: 700 1.08rem/1.2 var(--head); letter-spacing: .06em; color: var(--gold); text-decoration: none; }
+.brand .banner { color: var(--nav-muted); font-weight: 600; }
+.bar nav { margin-left: auto; display: flex; gap: 6px 18px; align-items: center; flex-wrap: wrap; }
+.bar nav a { color: var(--nav-ink); text-decoration: none; font-size: .95rem; }
+.bar nav a:hover { color: var(--gold); }
+.bar nav a.btn { border: 1px solid var(--gold); color: var(--gold); border-radius: 6px; padding: 4px 12px; }
+.bar nav a.btn:hover { background: var(--gold); color: var(--nav); }
+
+/* The hero: the menu's navy, the wordmark large, as at the top of Straightline's menu. */
+.hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem; border-bottom: 2px solid var(--gold);
+  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%); }
+.mark { display: inline-block; width: fit-content; margin: 0 auto; text-align: left; }
+.mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
+.mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
+h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+.tagline { font-size: clamp(1.05rem, 3vw, 1.2rem); color: var(--nav-ink); opacity: .9; max-width: 36rem; margin: 1.2rem auto 0; }
+.eyebrow { font-variant-caps: all-small-caps; letter-spacing: .2em; color: var(--nav-muted); margin: 0 0 1rem; font-size: 1.05rem; }
+.phase { display: inline-flex; align-items: center; gap: .5rem; margin: 1.8rem 0 .3rem; padding: .3rem .95rem; border: 1px solid currentColor; border-radius: 999px;
+  color: var(--gold); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.phase::before { content: "\25C6"; font-size: .7em; animation: pulse 2s ease-in-out infinite; }
+.phase.live { color: #8fc59a; } .phase.off { color: var(--nav-muted); } .phase.off::before { animation: none; }
 @keyframes pulse { 50% { opacity: .3; } }
 @media (prefers-reduced-motion: reduce) { .phase::before { animation: none; } }
-.lead { color: var(--muted); margin: .4rem 0 1.1rem; }
+.lead { color: var(--nav-muted); margin: .4rem 0 1.1rem; }
 .clock { display: flex; justify-content: center; gap: clamp(.4rem, 2.5vw, 1rem); margin: 0 0 .7rem; }
-.clock div { min-width: clamp(4.1rem, 19vw, 6.4rem); padding: .7rem .3rem .55rem; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--glow) 25%, transparent) inset, 0 8px 24px -16px rgba(0,0,0,.45); }
-.clock b { display: block; font: 600 clamp(2rem, 9vw, 3.4rem)/1 var(--mono); font-variant-numeric: tabular-nums; }
-.clock span { display: block; margin-top: .35rem; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-.when { color: var(--muted); font-size: .95rem; margin: 0 0 1.8rem; min-height: 1.5em; }
+.clock div { min-width: clamp(4.1rem, 19vw, 6.2rem); padding: .7rem .3rem .55rem; background: var(--page); color: var(--ink); border: 1px solid var(--frame); border-radius: 6px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent); }
+.clock b { display: block; font: 700 clamp(2rem, 9vw, 3.2rem)/1 var(--body); font-variant-numeric: lining-nums tabular-nums; }
+.clock span { display: block; margin-top: .35rem; font-size: .9rem; font-variant-caps: all-small-caps; letter-spacing: .12em; color: var(--muted); }
+.when { color: var(--nav-muted); font-size: .95rem; margin: 0 0 1.6rem; min-height: 1.5em; }
 .cta { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; }
-.button { display: inline-block; font: 600 1rem/1 var(--body); padding: .95rem 1.6rem; border-radius: 10px; text-decoration: none; border: 1px solid var(--accent); color: var(--ink); background: transparent; }
-.button.primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 28px -14px var(--glow); }
-.button:hover { filter: brightness(1.06); }
-.note { color: var(--muted); font-size: .9rem; margin: 1rem 0 0; min-height: 1.4em; }
+.button { display: inline-block; font: 700 1rem/1 var(--body); padding: .9rem 1.5rem; border-radius: 6px; text-decoration: none; border: 1px solid var(--gold); color: var(--gold); background: transparent; }
+.button.primary { background: var(--blue); border-color: var(--blue); color: var(--blue-ink); }
+.hero .button.primary { background: var(--gold); border-color: var(--gold); color: var(--nav); }
+.button:hover { filter: brightness(1.08); }
+.note { color: var(--nav-muted); font-size: .9rem; margin: 1rem 0 0; min-height: 1.4em; }
 
-/* Facts and sections. */
-.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .8rem; margin: 2.5rem 0 0; }
-.fact { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; }
-.fact b { display: block; font: 600 1.45rem/1.2 var(--mono); font-variant-numeric: tabular-nums; }
-.fact span { color: var(--muted); font-size: .85rem; }
-section { padding: 3.2rem 0 0; }
-h2 { font: 600 clamp(1.8rem, 5vw, 2.4rem)/1.15 var(--display); margin: 0 0 1.2rem; }
+/* Facts: a framed page's numbers, as Straightline's resource line. */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .8rem; margin: 2.2rem auto 0; max-width: 52rem; }
+.fact { background: var(--page); color: var(--ink); border: 1px solid var(--frame); border-radius: 6px; padding: .8rem 1rem; text-align: left; }
+.fact b { display: block; font: 700 1.4rem/1.2 var(--body); font-variant-numeric: lining-nums tabular-nums; }
+.fact span { color: var(--muted); font-variant-caps: all-small-caps; letter-spacing: .06em; font-size: 1rem; }
+
+/* Sections: Straightline's ruled headings in the book face, framed pages with ornamented corners. */
+section { padding: 3rem 0 0; }
+h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 1.1rem; font: 600 clamp(1.4rem, 4vw, 1.75rem)/1.2 var(--head); font-variant-caps: all-small-caps; letter-spacing: .1em; color: var(--gold); }
+h2::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--gold) 55%, transparent); }
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; padding: 0; margin: 0; list-style: none; counter-reset: step; }
-.steps li { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem 1.1rem 3.4rem; counter-increment: step; }
-.steps li::before { content: counter(step); position: absolute; left: 1.1rem; top: 1rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center;
-  font: 600 .85rem var(--body); color: var(--accent-ink); background: var(--accent); }
-.steps b { display: block; margin-bottom: .2rem; }
+.steps li { position: relative; background: var(--page); border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.15rem 1.05rem 3.2rem; counter-increment: step; }
+.steps li::before { content: ""; position: absolute; left: 1.15rem; top: 1.12rem; width: 1.15rem; height: 1.15rem; transform: rotate(45deg); background: var(--blue); border-radius: 2px; }
+.steps li::after { content: counter(step); position: absolute; left: 1.15rem; top: 1.12rem; width: 1.15rem; height: 1.15rem; display: grid; place-items: center; font: 700 .72rem/1 var(--body); color: var(--blue-ink); }
+.steps b { display: block; margin-bottom: .2rem; font-family: var(--head); font-size: 1.05rem; }
 .steps p, .own p { margin: 0; color: var(--muted); }
-.own { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1.4rem 1.5rem; display: grid; gap: 1rem; grid-template-columns: 1fr auto; align-items: center; }
-.own h2 { margin-bottom: .4rem; }
+.own { position: relative; background: var(--page); border: 1px solid var(--frame); border-radius: 6px; padding: 1.4rem 1.5rem; display: grid; gap: 1rem; grid-template-columns: 1fr auto; align-items: center; }
+.own::before, .own::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold); }
+.own::before { top: 5px; left: 5px; border-right: 0; border-bottom: 0; }
+.own::after { bottom: 5px; right: 5px; border-left: 0; border-top: 0; }
+.own h2 { margin-bottom: .5rem; }
 @media (max-width: 40rem) { .own { grid-template-columns: 1fr; } }
-footer { margin: 4rem 0 0; padding: 1.6rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
-footer .wrap { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content: space-between; }
+footer { margin: 4rem 0 0; padding: 1.4rem 0 2rem; background: var(--nav); color: var(--nav-muted); border-top: 2px solid var(--gold); font-size: .9rem; }
+footer .wrap { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content: space-between; align-items: center; }
 footer nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+footer a { color: var(--nav-ink); }
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
+<div class="bar">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="banner">Hegemoney:&nbsp;</span>Realmstate</a>
+    <nav aria-label="Site">
+      <a href="https://wizard1146.github.io/realmstate-wiki/">Guide</a>
+      <a href="https://github.com/wizard1146/realmstate-frontend">Front end</a>
+      <a class="btn" id="barplay" href="https://play.realmstate.net">Play</a>
+    </nav>
+  </div>
+</div>
 <header class="hero">
   <div class="wrap">
     <p class="eyebrow">Alpha test</p>
-    <h1>Realmstate</h1>
+    <div class="mark"><span class="banner">Hegemoney:</span><h1>REALMSTATE</h1></div>
     <p class="tagline">A tick-based strategy game of realms, states and houses. Found a house, join a state, and grow, trade and fight with everyone else, a tick at a time.</p>
 
     <div class="phase off" id="phase" role="status">Checking the game…</div>
@@ -189,6 +224,7 @@ function draw() {
   const target = age.play_url && /^https?:/.test(age.play_url) ? age.play_url : PLAY;
   play.href = target;
   $('foot-play').href = target;
+  $('barplay').href = target;
   if (before) {
     phase.className = 'phase';
     phase.textContent = 'Registration is open';
