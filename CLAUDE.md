@@ -3,7 +3,7 @@
 The landing page at https://realmstate.net. Read `README.md` first.
 
 Identity: **wizard1146** (`yellowhat1146@gmail.com`), SSH host alias `github-wizard1146`. Local git config is set.
-Remote: `git@github-wizard1146:wizard1146/realmstate-site.git` (branch `main`); GitHub Pages serves `main`.
+Remote: `git@github-wizard1146:wizard1146/realmstate-landing.git` (branch `main`); GitHub Pages serves `main`.
 
 ## Rules
 - Static only: plain HTML, CSS and JavaScript, no build step, no framework, no runtime dependencies (Google Fonts is

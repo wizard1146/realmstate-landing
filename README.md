@@ -19,6 +19,6 @@ http://localhost:8080.
 
 | Address | What | Repository |
 |---|---|---|
-| realmstate.net | This page | `wizard1146/realmstate-site` |
+| realmstate.net | This page | `wizard1146/realmstate-landing` |
 | play.realmstate.net | The player front end | `wizard1146/realmstate-frontend` |
 | api.realmstate.net | The game server: API, sign-in | `wizard1146/realmstate` |
