@@ -128,10 +128,10 @@ footer a { color: var(--nav-ink); }
 @keyframes turn { to { transform: rotate(360deg); } }
 .ring .tick { stroke: var(--nav-muted); stroke-width: .3; stroke-linecap: butt; }
 .ring .tick.realm { stroke: var(--gold); stroke-width: .35; }
-.ring .rim { fill: none; stroke: var(--gold); stroke-width: .18; opacity: .45; }
-.ring .war { fill: none; stroke: #e2765f; stroke-width: .9; opacity: 0;
+.ring .rim { fill: none; stroke: var(--gold); stroke-width: .32; opacity: .55; }
+.ring .war { fill: none; stroke: #e2765f; stroke-width: .5; opacity: 0;
   animation: var(--k, glow) var(--dur, 9s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; }
-.ring .peace { fill: none; stroke: var(--nav-muted); stroke-width: .7; stroke-dasharray: 3 4; opacity: 0;
+.ring .peace { fill: none; stroke: var(--nav-muted); stroke-width: .4; stroke-dasharray: 3 4; opacity: 0;
   animation: var(--k, glow) var(--dur, 13s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; --peak: .45; }
 /* Each war fades in and out on its own loop: two shapes (a plain swell; a swell that lingers at its height), a length,
    an offset and an easing set per line in the script, so together they never visibly repeat. */
@@ -332,7 +332,6 @@ function wake() { wakers.forEach((f) => f(running())); }
   const svg = $('ringsvg'), NS = 'http://www.w3.org/2000/svg', N = 91, R = 92;
   const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const at = (i, r) => { const a = (i / N) * Math.PI * 2 - Math.PI / 2; return [Math.cos(a) * r, Math.sin(a) * r]; };
-  svg.append(el('circle', { class: 'rim', r: R - 3 }), el('circle', { class: 'rim', r: R + 11 }));
   // Worn ticks: uneven in length, start and angle; some broken in two; tarnished (dimmer, browner) here and there.
   let wear = 91; const w = () => ((wear = (wear * 48271) % 2147483647) / 2147483647);
   const tarnish = ['#b8892e', '#a07a35', '#8a6e3f', '#6f5f45', '#c9a24a'];
@@ -348,6 +347,8 @@ function wake() { wakers.forEach((f) => f(running())); }
     }
   }
   const arcs = el('g', {}); svg.append(arcs);
+  // The gold rings last, so they sit above the ticks and the lines.
+  svg.append(el('circle', { class: 'rim', r: R - 3 }), el('circle', { class: 'rim', r: R + 11 }));
   // A fixed pattern: wars (red) and ceasefires (dashed), each fading in and out on its own CSS loop.
   let seed = 7; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   const EASES = ['ease-in-out', 'cubic-bezier(.7,0,.3,1)', 'cubic-bezier(.2,.8,.2,1)', 'cubic-bezier(.9,.05,.6,.95)', 'cubic-bezier(.4,0,1,1)', 'cubic-bezier(0,0,.2,1)', 'linear'];
