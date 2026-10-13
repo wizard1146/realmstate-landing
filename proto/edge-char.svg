@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="34" viewBox="0 0 600 34">
+  <!-- The scorch under the hero's burnt edge: the same ragged line, a little deeper and softer. Tiles sideways without a seam. -->
+  <filter id="f" filterUnits="userSpaceOnUse" x="0" y="-40" width="600" height="80">
+    <feTurbulence type="fractalNoise" baseFrequency=".02 .08" numOctaves="4" seed="5" stitchTiles="stitch" result="n"/>
+    <feColorMatrix in="n" values="1 0 0 0 0  0 0 0 0 .5  0 0 0 0 0  0 0 0 0 1" result="d"/>
+    <feDisplacementMap in="SourceGraphic" in2="d" scale="26" xChannelSelector="G" yChannelSelector="R"/>
+    <feGaussianBlur stdDeviation="1.2"/>
+  </filter>
+  <rect x="0" y="-40" width="600" height="59" fill="#000" filter="url(#f)"/>
+</svg>
