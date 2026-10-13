@@ -127,8 +127,10 @@ footer a { color: var(--nav-ink); }
 .ring.still svg { animation-play-state: paused; }
 @keyframes turn { to { transform: rotate(360deg); } }
 .ring .tick { stroke: var(--nav-muted); stroke-width: .3; stroke-linecap: butt; }
-.ring .tick.realm { stroke: var(--gold); stroke-width: .35; }
-.ring .rim { fill: none; stroke: var(--gold); stroke-width: .7; opacity: .3; }
+/* The gold rings and the realm ticks share one solid, muted gold: no see-through, so the rings cover what's under them. */
+.ring { --rim: color-mix(in srgb, var(--gold) 55%, var(--nav)); }
+.ring .tick.realm, .ring .rim { stroke: var(--rim); stroke-width: .7; }
+.ring .rim { fill: none; }
 .ring .war { fill: none; stroke: #e2765f; stroke-width: .5; opacity: 0;
   animation: var(--k, glow) var(--dur, 9s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; }
 .ring .peace { fill: none; stroke: var(--nav-muted); stroke-width: .4; stroke-dasharray: 3 4; opacity: 0;
@@ -332,15 +334,16 @@ function wake() { wakers.forEach((f) => f(running())); }
   const svg = $('ringsvg'), NS = 'http://www.w3.org/2000/svg', N = 91, R = 92;
   const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const at = (i, r) => { const a = (i / N) * Math.PI * 2 - Math.PI / 2; return [Math.cos(a) * r, Math.sin(a) * r]; };
-  // Worn ticks: uneven in length, start and angle; some broken in two; tarnished (dimmer, browner) here and there.
+  // Worn ticks: uneven in length, start and angle; some broken in two.
   let wear = 91; const w = () => ((wear = (wear * 48271) % 2147483647) / 2147483647);
-  const tarnish = ['#b8892e', '#a07a35', '#8a6e3f', '#6f5f45', '#c9a24a'];
   for (let i = 0; i < N; i++) {
     const realm = i % 7 === 0, a = i + (w() - .5) * .35;
     const from = w() < .8 ? R - 3 : R - 3 + .6 + w() * 2,   // most rest on the inner ring; a few sit off it
        len = (realm ? 9 : 5) + w() * (realm ? 5 : 4) - (w() < .15 ? 3 : 0);
     const segs = w() < .22 ? [[0, .35 + w() * .2], [.55 + w() * .2, 1]] : [[0, 1]];   // broken: a gap part-way
-    const style = `opacity:${(realm ? .55 + w() * .4 : .25 + w() * .45).toFixed(2)}` + (realm ? `;stroke:${tarnish[Math.floor(w() * tarnish.length)]}` : '');
+    // Realm ticks match the gold rings exactly; the white ticks keep their uneven wear.
+    const fade = realm ? .55 + w() * .4 : .25 + w() * .45; if (realm) w();
+    const style = realm ? '' : `opacity:${fade.toFixed(2)}`;
     for (const [s0, s1] of segs) {
       const [x1, y1] = at(a, from + len * s0), [x2, y2] = at(a, from + len * s1);
       svg.append(el('line', { class: 'tick' + (realm ? ' realm' : ''), x1, y1, x2, y2, style }));
