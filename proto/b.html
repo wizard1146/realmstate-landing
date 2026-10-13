@@ -38,13 +38,13 @@
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
+body { margin: 0; background: var(--bg) url(paper.svg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
 a { color: var(--blue); }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 .wrap { max-width: 66rem; margin: 0 auto; padding: 0 16px; }
 
 /* The bar, as Straightline's header: navy, a gold rule under it, the wordmark at the left. */
-.bar { background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
+.bar { position: sticky; top: 0; z-index: 40; background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
 .bar .wrap { display: flex; align-items: center; gap: 10px 20px; min-height: 3.2rem; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
 .brand { font: 700 1.08rem/1.2 var(--head); letter-spacing: .06em; color: var(--gold); text-decoration: none; }
 .brand .banner { color: color-mix(in srgb, var(--nav-muted) 55%, var(--nav)); font-weight: 600; }
