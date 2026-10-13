@@ -61,6 +61,10 @@ a { color: var(--blue); }
 .mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
 .mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
 h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+/* Paper burns: holes cut through the letters (burn-mask.svg), each with a scorched brown edge (burn-char.svg).
+   Both use the same noise, so the edges line up with the holes. */
+h1 { color: transparent; background: url(burn-char.svg) 0 0 / 100% 100%, var(--gold); -webkit-background-clip: text; background-clip: text;
+  -webkit-mask: url(burn-mask.svg) 0 0 / 100% 100%; mask: url(burn-mask.svg) 0 0 / 100% 100%; }
 /* Narrow screens: smaller and tighter, so REALMSTATE fits without a sideways scroll. */
 @media (max-width: 34rem) { h1 { font-size: 8.4vw; letter-spacing: .14em; margin-right: -.14em; } }
 .tagline { font-size: clamp(1.05rem, 3vw, 1.2rem); color: var(--nav-ink); opacity: .9; max-width: 36rem; margin: 1.2rem auto 0; }
@@ -141,6 +145,8 @@ footer a { color: var(--nav-ink); }
 @keyframes linger { 0% { opacity: 0; } 55% { opacity: var(--peak, .8); } 100% { opacity: calc(var(--peak, .8) * .7); } }
 .ring.still .war, .ring.still .peace { animation-play-state: paused; }
 .hero .mark, .hero .tagline { text-shadow: 0 0 18px var(--nav), 0 0 2px var(--nav); }
+/* No glow on the burnt heading: a text-shadow paints over its clipped-to-text gold, and a drop-shadow fills the holes. */
+.hero h1 { text-shadow: none; }
 @media (prefers-reduced-motion: reduce) { .ring svg { animation: none; } .ring .war, .ring .peace { animation: none; opacity: .45; } }
 /* IM Fell English comes in one weight: everything in it at that weight, never a faked bold. */
 h1, h2, .brand, .brand .banner, .mark .banner, .steps b { font-weight: 400; font-synthesis: none; }
