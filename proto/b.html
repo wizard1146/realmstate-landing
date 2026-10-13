@@ -56,7 +56,8 @@ a { color: var(--blue); }
 
 /* The hero: the menu's navy, the wordmark large, as at the top of Straightline's menu. */
 .hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem;
-  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%), url(hero-grain.svg); }
+  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%), url(hero-grain.svg);
+  background-attachment: scroll, fixed; }
 .mark { display: inline-block; width: fit-content; margin: 0 auto; text-align: left; }
 .mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
 .mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
@@ -145,13 +146,13 @@ footer a { color: var(--nav-ink); }
 @keyframes linger { 0% { opacity: 0; } 55% { opacity: var(--peak, .8); } 100% { opacity: calc(var(--peak, .8) * .7); } }
 .ring.still .war, .ring.still .peace { animation-play-state: paused; }
 .hero .mark, .hero .tagline { text-shadow: 0 0 18px var(--nav), 0 0 2px var(--nav); }
-/* The hero's burnt edge: the navy runs on in a ragged line (edge.svg), over a scorch that glows gold where it
+/* The hero's burnt edge (its grain fixed to the window, as the hero's is, so the two line up): the navy runs on in a ragged line (edge.svg), over a scorch that glows gold where it
    meets the navy and darkens to brown below (edge-char.svg). Both tile sideways and share one noise. */
 .burnt { position: relative; height: 0; z-index: 2; }
 .burnt::before, .burnt::after { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 34px; }
 .burnt::before { background: linear-gradient(to bottom, var(--gold) 0, var(--gold) 38%, #7a4a1c 55%, #3b2412 75%, transparent);
   -webkit-mask: url(edge-char.svg) 0 0 / 600px 34px repeat-x; mask: url(edge-char.svg) 0 0 / 600px 34px repeat-x; opacity: .9; }
-.burnt::after { background: var(--nav); -webkit-mask: url(edge.svg) 0 0 / 600px 34px repeat-x; mask: url(edge.svg) 0 0 / 600px 34px repeat-x; }
+.burnt::after { background: url(hero-grain.svg) fixed, var(--nav); -webkit-mask: url(edge.svg) 0 0 / 600px 34px repeat-x; mask: url(edge.svg) 0 0 / 600px 34px repeat-x; }
 
 /* Past the hero, the sticky bar darkens and casts a soft shadow, so it sits well over the paper. */
 .bar { transition: background-color .4s ease, box-shadow .4s ease; }
