@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Realmstate · Prototype A: Embers</title>
+<meta name="description" content="Realmstate: a tick-based kingdom strategy game of realms, states and houses. The alpha test is open: register now.">
+<meta property="og:title" content="Realmstate">
+<meta property="og:description" content="A tick-based kingdom strategy game of realms, states and houses. Alpha test: register now.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rosarivo&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Realmstate's front door, in Straightline's look (the player front end's default view): Vellum by day,
+   Night Vigil by night, Rosarivo headings over Source Sans 3, and the navy-and-gold "Hegemoney: Realmstate"
+   wordmark from its menu. Colours are Straightline's --l-* tokens (realmstate-frontend views/line/line.css). */
+:root {
+  --bg: #ede6d6; --page: #fffdf8; --ink: #26241f; --muted: #6c675d; --line: #ddd5c4; --rule: #ebe5d8;
+  --nav: #23324a; --nav-ink: #e9e4d8; --nav-muted: #9fadc2; --gold: #b8892e; --blue: #2f5d8a; --blue-ink: #ffffff;
+  --good: #2f6b3a; --frame: #b9a57c;
+  --head: Rosarivo, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101318; --page: #1b1f26; --ink: #e6e2d8; --muted: #a39d90; --line: #343a45; --rule: #2a2f38;
+    --nav: #0c1118; --nav-ink: #e6e2d8; --nav-muted: #8592a6; --gold: #d9ad55; --blue: #6f9fd0; --blue-ink: #0f141a;
+    --good: #8fc59a; --frame: #6c5a35; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101318; --page: #1b1f26; --ink: #e6e2d8; --muted: #a39d90; --line: #343a45; --rule: #2a2f38;
+  --nav: #0c1118; --nav-ink: #e6e2d8; --nav-muted: #8592a6; --gold: #d9ad55; --blue: #6f9fd0; --blue-ink: #0f141a;
+  --good: #8fc59a; --frame: #6c5a35; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
+a { color: var(--blue); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 66rem; margin: 0 auto; padding: 0 16px; }
+
+/* The bar, as Straightline's header: navy, a gold rule under it, the wordmark at the left. */
+.bar { background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
+.bar .wrap { display: flex; align-items: center; gap: 10px 20px; min-height: 3.2rem; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
+.brand { font: 700 1.08rem/1.2 var(--head); letter-spacing: .06em; color: var(--gold); text-decoration: none; }
+.brand .banner { color: var(--nav-muted); font-weight: 600; }
+.bar nav { margin-left: auto; display: flex; gap: 6px 18px; align-items: center; flex-wrap: wrap; }
+.bar nav a { color: var(--nav-ink); text-decoration: none; font-size: .95rem; }
+.bar nav a:hover { color: var(--gold); }
+.bar nav a.btn { border: 1px solid var(--gold); color: var(--gold); border-radius: 6px; padding: 4px 12px; }
+.bar nav a.btn:hover { background: var(--gold); color: var(--nav); }
+
+/* The hero: the menu's navy, the wordmark large, as at the top of Straightline's menu. */
+.hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem; border-bottom: 2px solid var(--gold);
+  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%); }
+.mark { display: inline-block; width: fit-content; margin: 0 auto; text-align: left; }
+.mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
+.mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
+h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+/* Narrow screens: smaller and tighter, so REALMSTATE fits without a sideways scroll. */
+@media (max-width: 34rem) { h1 { font-size: 8.4vw; letter-spacing: .14em; margin-right: -.14em; } }
+.tagline { font-size: clamp(1.05rem, 3vw, 1.2rem); color: var(--nav-ink); opacity: .9; max-width: 36rem; margin: 1.2rem auto 0; }
+.eyebrow { font-variant-caps: all-small-caps; letter-spacing: .2em; color: var(--nav-muted); margin: 0 0 1rem; font-size: 1.05rem; }
+.phase { display: inline-flex; align-items: center; gap: .5rem; margin: 1.8rem 0 .3rem; padding: .3rem .95rem; border: 1px solid currentColor; border-radius: 999px;
+  color: var(--gold); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.phase::before { content: "\25C6"; font-size: .7em; animation: pulse 2s ease-in-out infinite; }
+.phase.live { color: #8fc59a; } .phase.off { color: var(--nav-muted); } .phase.off::before { animation: none; }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .phase::before { animation: none; } }
+.lead { color: var(--nav-muted); margin: .4rem 0 1.1rem; }
+.clock { display: flex; justify-content: center; gap: clamp(.4rem, 2.5vw, 1rem); margin: 0 0 .7rem; }
+.clock div { min-width: clamp(4.1rem, 19vw, 6.2rem); padding: .7rem .3rem .55rem; background: var(--page); color: var(--ink); border: 1px solid var(--frame); border-radius: 6px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent); }
+.clock b { display: block; font: 700 clamp(2rem, 9vw, 3.2rem)/1 var(--body); font-variant-numeric: lining-nums tabular-nums; }
+.clock span { display: block; margin-top: .35rem; font-size: .9rem; font-variant-caps: all-small-caps; letter-spacing: .12em; color: var(--muted); }
+.when { color: var(--nav-muted); font-size: .95rem; margin: 0 0 1.6rem; min-height: 1.5em; }
+.cta { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; }
+.button { display: inline-block; font: 700 1rem/1 var(--body); padding: .9rem 1.5rem; border-radius: 6px; text-decoration: none; border: 1px solid var(--gold); color: var(--gold); background: transparent; }
+.button.primary { background: var(--blue); border-color: var(--blue); color: var(--blue-ink); }
+.hero .button.primary { background: var(--gold); border-color: var(--gold); color: var(--nav); }
+.button:hover { filter: brightness(1.08); }
+.note { color: var(--nav-muted); font-size: .9rem; margin: 1rem 0 0; min-height: 1.4em; }
+
+/* Facts: a framed page's numbers, as Straightline's resource line. */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .8rem; margin: 2.2rem auto 0; max-width: 52rem; }
+.fact { background: var(--page); color: var(--ink); border: 1px solid var(--frame); border-radius: 6px; padding: .8rem 1rem; text-align: left; }
+.fact b { display: block; font: 700 1.4rem/1.2 var(--body); font-variant-numeric: lining-nums tabular-nums; }
+.fact span { color: var(--muted); font-variant-caps: all-small-caps; letter-spacing: .06em; font-size: 1rem; }
+
+/* Sections: Straightline's ruled headings in the book face, framed pages with ornamented corners. */
+section { padding: 3rem 0 0; }
+h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 1.1rem; font: 600 clamp(1.4rem, 4vw, 1.75rem)/1.2 var(--head); font-variant-caps: all-small-caps; letter-spacing: .1em; color: var(--gold); }
+h2::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--gold) 55%, transparent); }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; padding: 0; margin: 0; list-style: none; counter-reset: step; }
+.steps li { position: relative; background: var(--page); border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.15rem 1.05rem 3.2rem; counter-increment: step; }
+.steps li::before { content: ""; position: absolute; left: 1.15rem; top: 1.12rem; width: 1.15rem; height: 1.15rem; transform: rotate(45deg); background: var(--blue); border-radius: 2px; }
+.steps li::after { content: counter(step); position: absolute; left: 1.15rem; top: 1.12rem; width: 1.15rem; height: 1.15rem; display: grid; place-items: center; font: 700 .72rem/1 var(--body); color: var(--blue-ink); }
+.steps b { display: block; margin-bottom: .2rem; font-family: var(--head); font-size: 1.05rem; }
+.steps p, .own p { margin: 0; color: var(--muted); }
+.own { position: relative; background: var(--page); border: 1px solid var(--frame); border-radius: 6px; padding: 1.4rem 1.5rem; display: grid; gap: 1rem; grid-template-columns: 1fr auto; align-items: center; }
+.own::before, .own::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold); }
+.own::before { top: 5px; left: 5px; border-right: 0; border-bottom: 0; }
+.own::after { bottom: 5px; right: 5px; border-left: 0; border-top: 0; }
+.own h2 { margin-bottom: .5rem; }
+@media (max-width: 40rem) { .own { grid-template-columns: 1fr; } }
+footer { margin: 4rem 0 0; padding: 1.4rem 0 2rem; background: var(--nav); color: var(--nav-muted); border-top: 2px solid var(--gold); font-size: .9rem; }
+footer .wrap { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+footer nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+footer a { color: var(--nav-ink); }
+[hidden] { display: none !important; }
+
+/* ---- Prototype layer (proto/) ---- */
+.hero { position: relative; overflow: hidden; isolation: isolate; }
+.hero > .wrap { position: relative; z-index: 1; }
+.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.proto-tag { position: fixed; left: 12px; bottom: 12px; z-index: 50; background: var(--page); color: var(--ink); border: 1px solid var(--gold);
+  border-radius: 999px; padding: 5px 12px; font-size: .82rem; box-shadow: 0 4px 16px -8px rgba(0,0,0,.5); }
+.proto-tag a { color: var(--blue); }
+
+.clock b { overflow: hidden; }
+.clock b.roll { animation: roll .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes roll { from { transform: translateY(-.55em); opacity: 0; filter: blur(1px); } to { transform: none; opacity: 1; filter: none; } }
+.button { position: relative; overflow: hidden; }
+.button::after { content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
+  background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, #fff3cf 55%, transparent) 50%, transparent 70%); }
+.button:hover::after, .button:focus-visible::after { transform: translateX(130%); transition: transform .8s ease; }
+.hero .clock div { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent), 0 0 32px -10px var(--gold); }
+@media (prefers-reduced-motion: reduce) { .clock b.roll { animation: none; } .button::after { display: none; } }
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="banner">Hegemoney:&nbsp;</span>Realmstate</a>
+    <nav aria-label="Site">
+      <a href="https://wizard1146.github.io/realmstate-wiki/">Guide</a>
+      <a href="https://github.com/wizard1146/realmstate-frontend">Front end</a>
+      <a class="btn" id="barplay" href="https://play.realmstate.net">Play</a>
+    </nav>
+  </div>
+</div>
+<header class="hero"><canvas class="fx" id="embers" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="eyebrow">Alpha test</p>
+    <div class="mark"><span class="banner">Hegemoney:</span><h1>REALMSTATE</h1></div>
+    <p class="tagline">A tick-based strategy game of realms, states and houses. Found a house, join a state, and grow, trade and fight with everyone else, a tick at a time.</p>
+
+    <div class="phase off" id="phase" role="status">Checking the game…</div>
+    <p class="lead" id="lead"></p>
+    <div class="clock" id="clock" hidden>
+      <div><b id="d">0</b><span>days</span></div>
+      <div><b id="h">00</b><span>hours</span></div>
+      <div><b id="m">00</b><span>minutes</span></div>
+      <div><b id="s">00</b><span>seconds</span></div>
+    </div>
+    <p class="when" id="when"></p>
+    <div class="cta">
+      <a class="button primary" id="play" href="https://play.realmstate.net">Register now</a>
+      <a class="button" href="https://wizard1146.github.io/realmstate-wiki/">Read the guide</a>
+    </div>
+    <p class="note" id="note"></p>
+
+    <div class="facts" id="facts" hidden></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section aria-labelledby="how-title">
+    <h2 id="how-title">How it works</h2>
+    <ol class="steps">
+      <li><b>Found your house now</b><p>Sign in with Google, name your house, and choose a race and a personality. Each one changes how you play.</p></li>
+      <li><b>Nothing happens before the start</b><p>Your house waits safely until the countdown ends, so there's no head start to lose by joining late in registration.</p></li>
+      <li><b>The world moves in ticks</b><p>Every 5 minutes a tick falls: gold and food come in, buildings finish, armies march home. Plan between them.</p></li>
+      <li><b>Robots keep the world full</b><p>Robot houses fill the empty seats in every state. When a person joins, a robot steps aside, and robots vote for people to lead.</p></li>
+      <li><b>States choose leaders</b><p>The houses of a state vote for a leader, who sets the tax, runs the treasury and decides on war.</p></li>
+      <li><b>War and the market</b><p>Attack for land, spy, work rites, and trade the materials your realm makes for the ones it doesn't.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="own-title">
+    <div class="own">
+      <div>
+        <h2 id="own-title">Build your own front end</h2>
+        <p>The game's screens are an ordinary website that uses the same public API anyone can. Fork it, change it, host it anywhere, and play the live game with it. Nothing about the official one is special.</p>
+      </div>
+      <div class="cta" style="justify-content:flex-start">
+        <a class="button" href="https://github.com/wizard1146/realmstate-frontend">The front end's code</a>
+        <a class="button" href="https://wizard1146.github.io/realmstate-wiki/api.html">The API</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Realmstate · alpha test</span>
+    <nav aria-label="More">
+      <a href="https://play.realmstate.net" id="foot-play">Play</a>
+      <a href="https://wizard1146.github.io/realmstate-wiki/">Guide</a>
+      <a href="https://wizard1146.github.io/realmstate-wiki/changelog.html">What's new</a>
+      <a id="hall" href="https://api.realmstate.net/hall">Hall of ages</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+// The game server this page reads (its public /age). ?game=https://... points it elsewhere.
+const GAME = new URLSearchParams(location.search).get('game') || 'https://api.realmstate.net';
+const PLAY = 'https://play.realmstate.net';
+
+const $ = (id) => document.getElementById(id);
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// A countdown digit: set it (an option may animate the change).
+let put = (el, v) => { if (el.textContent !== String(v)) el.textContent = v; };
+const num = (n) => Number(n).toLocaleString();
+const pad = (n) => String(n).padStart(2, '0');
+let age = null, skew = 0, reachable = true;
+
+$('hall').href = GAME + '/hall';
+
+function when(t) {
+  return new Date(t).toLocaleString([], { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' });
+}
+
+function draw() {
+  const phase = $('phase'), play = $('play');
+  if (!age) {
+    phase.className = 'phase off';
+    phase.textContent = reachable ? 'Checking the game…' : 'The game is unreachable just now';
+    $('lead').textContent = reachable ? '' : 'Registration may still be open. Try again in a minute, or go straight to the game.';
+    $('clock').hidden = true;
+    return;
+  }
+  const now = Date.now() + skew;
+  const end = age.started_at + age.age_ticks * age.tick_ms;
+  const before = now < age.started_at;
+  const over = age.ended || now >= end;
+  const left = Math.max(0, (before ? age.started_at : end) - now);
+  $('clock').hidden = over;
+  put($('d'), Math.floor(left / 86400000));
+  put($('h'), pad(Math.floor(left / 3600000) % 24));
+  put($('m'), pad(Math.floor(left / 60000) % 60));
+  put($('s'), pad(Math.floor(left / 1000) % 60));
+  const target = age.play_url && /^https?:/.test(age.play_url) ? age.play_url : PLAY;
+  play.href = target;
+  $('foot-play').href = target;
+  $('barplay').href = target;
+  if (before) {
+    phase.className = 'phase';
+    phase.textContent = 'Registration is open';
+    $('lead').textContent = `${age.name || 'The age'} begins in`;
+    $('when').textContent = `${when(age.started_at)}, your time`;
+    play.textContent = 'Register now';
+    play.hidden = false;
+  } else if (!over) {
+    phase.className = 'phase live';
+    phase.textContent = 'The age is under way';
+    $('lead').textContent = `Tick ${num(age.ticks)} of ${num(age.age_ticks)}. The age ends in`;
+    $('when').textContent = `${when(end)}, your time. You can still join: a newcomer takes a robot's seat.`;
+    play.textContent = 'Play';
+    play.hidden = false;
+  } else {
+    phase.className = 'phase off';
+    phase.textContent = 'The age has ended';
+    $('lead').innerHTML = `See how it finished in the <a href="${GAME}/hall">Hall of ages</a>. The next age is announced there.`;
+    $('when').textContent = '';
+    play.textContent = 'Play';
+  }
+}
+
+function drawFacts() {
+  if (!age) { $('facts').hidden = true; return; }
+  const mins = age.tick_ms / 60000;
+  const tick = mins >= 60 ? `${mins / 60} hour${mins === 60 ? '' : 's'}` : `${mins} minute${mins === 1 ? '' : 's'}`;
+  const days = age.age_ticks * age.tick_ms / 86400000;
+  const facts = [
+    [tick, 'a tick'],
+    [`${days >= 1 ? Math.round(days) : days.toFixed(1)} days`, `the age, ${num(age.age_ticks)} ticks`],
+    [num(age.people ?? 0), 'people have a house'],
+    [num(age.seats ?? 0), 'seats in the world'],
+  ];
+  $('facts').innerHTML = facts.map(([b, s]) => `<div class="fact"><b>${b}</b><span>${s}</span></div>`).join('');
+  $('facts').hidden = false;
+  if (window.afterFacts) afterFacts();
+}
+
+async function refresh() {
+  try {
+    const r = await fetch(GAME + '/age', { credentials: 'omit', cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const served = Date.parse(r.headers.get('date') || '');
+    age = await r.json();
+    if (!Number.isNaN(served)) skew = served - Date.now();
+    reachable = true;
+    $('note').textContent = '';
+  } catch (e) {
+    reachable = false;
+    if (!age) $('note').textContent = '';
+  }
+  draw();
+  drawFacts();
+}
+
+
+// ---- Prototype layer (proto/) ----
+const hero = document.querySelector('.hero');
+const live = { hero: true, page: !document.hidden };
+new IntersectionObserver(([e]) => { live.hero = e.isIntersecting; wake(); }).observe(hero);
+document.addEventListener('visibilitychange', () => { live.page = !document.hidden; wake(); });
+const running = () => live.hero && live.page && !REDUCE;
+const wakers = [];
+function wake() { wakers.forEach((f) => f(running())); }
+
+// Embers: motes that rise, sway and fade, gold from the theme; fewer on small screens.
+put = (el, v) => {
+  if (el.textContent === String(v)) return;
+  el.textContent = v;
+  if (REDUCE) return;
+  el.classList.remove('roll'); void el.offsetWidth; el.classList.add('roll');
+};
+(() => {
+  const c = $('embers'), g = c.getContext('2d');
+  let w = 0, h = 0, dpr = 1, motes = [], raf = 0, last = 0, gold = '#d9ad55';
+  function size() {
+    dpr = Math.min(2, devicePixelRatio || 1); w = c.clientWidth; h = c.clientHeight;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    gold = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim() || gold;
+    const n = Math.round(Math.min(90, w * h / 9000));
+    while (motes.length < n) motes.push(mote(true));
+    motes.length = n;
+  }
+  function mote(anywhere) {
+    return { x: Math.random() * w, y: anywhere ? Math.random() * h : h + 10, r: .6 + Math.random() * 1.9,
+      v: 8 + Math.random() * 22, s: Math.random() * Math.PI * 2, sw: .4 + Math.random() * .9, life: 0, max: 6 + Math.random() * 9 };
+  }
+  function frame(t) {
+    const dt = Math.min(.05, (t - (last || t)) / 1000); last = t;
+    g.clearRect(0, 0, w, h);
+    g.globalCompositeOperation = 'lighter';
+    for (const m of motes) {
+      m.life += dt; m.y -= m.v * dt; m.s += dt * m.sw; m.x += Math.sin(m.s) * 6 * dt;
+      if (m.y < -10 || m.life > m.max) Object.assign(m, mote(false));
+      const k = Math.min(1, m.life / 1.5) * Math.max(0, 1 - m.life / m.max) * Math.min(1, (m.y / h) * 3);
+      g.globalAlpha = .55 * k;
+      g.fillStyle = gold;
+      g.beginPath(); g.arc(m.x, m.y, m.r * 2.6, 0, 7); g.fill();
+      g.globalAlpha = .9 * k;
+      g.beginPath(); g.arc(m.x, m.y, m.r, 0, 7); g.fill();
+    }
+    g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    raf = requestAnimationFrame(frame);
+  }
+  function go(on) { cancelAnimationFrame(raf); raf = 0; last = 0; if (on) raf = requestAnimationFrame(frame); }
+  addEventListener('resize', size); size();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', size);
+  wakers.push(go); go(running());
+})();
+
+refresh();
+setInterval(draw, 1000);
+setInterval(refresh, 30000);
+</script>
+<p class="proto-tag">Prototype A: Embers · <a href="./">all options</a></p>
+</body>
+</html>

@@ -60,6 +60,8 @@ a { color: var(--blue); }
 .mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
 .mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
 h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+/* Narrow screens: smaller and tighter, so REALMSTATE fits without a sideways scroll. */
+@media (max-width: 34rem) { h1 { font-size: 8.4vw; letter-spacing: .14em; margin-right: -.14em; } }
 .tagline { font-size: clamp(1.05rem, 3vw, 1.2rem); color: var(--nav-ink); opacity: .9; max-width: 36rem; margin: 1.2rem auto 0; }
 .eyebrow { font-variant-caps: all-small-caps; letter-spacing: .2em; color: var(--nav-muted); margin: 0 0 1rem; font-size: 1.05rem; }
 .phase { display: inline-flex; align-items: center; gap: .5rem; margin: 1.8rem 0 .3rem; padding: .3rem .95rem; border: 1px solid currentColor; border-radius: 999px;
