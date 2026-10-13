@@ -121,7 +121,7 @@ footer a { color: var(--nav-ink); }
   border-radius: 999px; padding: 5px 12px; font-size: .82rem; box-shadow: 0 4px 16px -8px rgba(0,0,0,.5); }
 .proto-tag a { color: var(--blue); }
 
-.ring { position: absolute; left: 50%; top: clamp(7rem, 30vh, 15rem); width: min(820px, 150vw); aspect-ratio: 1; transform: translate(-50%, -50%);
+.ring { position: absolute; left: 50%; top: 50%; width: 80vw; aspect-ratio: 1; transform: translate(-50%, -50%);
   pointer-events: none; z-index: 0; opacity: .32; }
 .ring svg { width: 100%; height: 100%; display: block; animation: turn 260s linear infinite; }
 .ring.still svg { animation-play-state: paused; }
@@ -338,7 +338,8 @@ function wake() { wakers.forEach((f) => f(running())); }
   const tarnish = ['#b8892e', '#a07a35', '#8a6e3f', '#6f5f45', '#c9a24a'];
   for (let i = 0; i < N; i++) {
     const realm = i % 7 === 0, a = i + (w() - .5) * .35;
-    const from = R - (realm ? 1.5 : 0) + (w() - .5) * 2.2, len = (realm ? 9 : 5) + w() * (realm ? 5 : 4) - (w() < .15 ? 3 : 0);
+    const from = w() < .8 ? R - 3 : R - 3 + .6 + w() * 2,   // most rest on the inner ring; a few sit off it
+       len = (realm ? 9 : 5) + w() * (realm ? 5 : 4) - (w() < .15 ? 3 : 0);
     const segs = w() < .22 ? [[0, .35 + w() * .2], [.55 + w() * .2, 1]] : [[0, 1]];   // broken: a gap part-way
     const style = `opacity:${(realm ? .55 + w() * .4 : .25 + w() * .45).toFixed(2)}` + (realm ? `;stroke:${tarnish[Math.floor(w() * tarnish.length)]}` : '');
     for (const [s0, s1] of segs) {
