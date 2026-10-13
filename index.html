@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>Realmstate</title>
 <meta name="description" content="Realmstate: a tick-based kingdom strategy game of realms, states and houses. The alpha test is open: register now.">
 <meta property="og:title" content="Realmstate">
@@ -10,16 +11,16 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rosarivo&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* Realmstate's front door, in Straightline's look (the player front end's default view): Vellum by day,
-   Night Vigil by night, Rosarivo headings over Source Sans 3, and the navy-and-gold "Hegemoney: Realmstate"
+   Night Vigil by night, IM Fell English headings over Source Sans 3, and the navy-and-gold "Hegemoney: Realmstate"
    wordmark from its menu. Colours are Straightline's --l-* tokens (realmstate-frontend views/line/line.css). */
 :root {
   --bg: #ede6d6; --page: #fffdf8; --ink: #26241f; --muted: #6c675d; --line: #ddd5c4; --rule: #ebe5d8;
   --nav: #23324a; --nav-ink: #e9e4d8; --nav-muted: #9fadc2; --gold: #b8892e; --blue: #2f5d8a; --blue-ink: #ffffff;
   --good: #2f6b3a; --frame: #b9a57c;
-  --head: Rosarivo, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --head: "IM Fell English", "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   color-scheme: light;
 }
@@ -37,16 +38,16 @@
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
+body { margin: 0; background: var(--bg) url(art/paper.svg); color: var(--ink); font: 16px/1.55 var(--body); overflow-x: hidden; }
 a { color: var(--blue); }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 .wrap { max-width: 66rem; margin: 0 auto; padding: 0 16px; }
 
 /* The bar, as Straightline's header: navy, a gold rule under it, the wordmark at the left. */
-.bar { background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
+.bar { position: sticky; top: 0; z-index: 40; background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--gold); }
 .bar .wrap { display: flex; align-items: center; gap: 10px 20px; min-height: 3.2rem; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
 .brand { font: 700 1.08rem/1.2 var(--head); letter-spacing: .06em; color: var(--gold); text-decoration: none; }
-.brand .banner { color: var(--nav-muted); font-weight: 600; }
+.brand .banner { color: color-mix(in srgb, var(--nav-muted) 55%, var(--nav)); font-weight: 600; }
 .bar nav { margin-left: auto; display: flex; gap: 6px 18px; align-items: center; flex-wrap: wrap; }
 .bar nav a { color: var(--nav-ink); text-decoration: none; font-size: .95rem; }
 .bar nav a:hover { color: var(--gold); }
@@ -54,12 +55,16 @@ a { color: var(--blue); }
 .bar nav a.btn:hover { background: var(--gold); color: var(--nav); }
 
 /* The hero: the menu's navy, the wordmark large, as at the top of Straightline's menu. */
-.hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem; border-bottom: 2px solid var(--gold);
-  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%); }
+.hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem;
+  background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%), url(art/hero-grain.svg); }
 .mark { display: inline-block; width: fit-content; margin: 0 auto; text-align: left; }
 .mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
 .mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
-h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+h1 { margin: 0; font: 700 clamp(2.6rem, 9vw, 5.4rem)/1 var(--head); letter-spacing: .2em; color: var(--gold); margin-right: -.2em; }
+/* Paper burns: holes cut through the letters (burn-mask.svg), each with a scorched brown edge (burn-char.svg).
+   Both use the same noise, so the edges line up with the holes. */
+h1 { color: transparent; background: url(art/burn-char.svg) 0 0 / 100% 100%, var(--gold); -webkit-background-clip: text; background-clip: text;
+  -webkit-mask: url(art/burn-mask.svg) 0 0 / 100% 100%; mask: url(art/burn-mask.svg) 0 0 / 100% 100%; }
 /* Narrow screens: smaller and tighter, so REALMSTATE fits without a sideways scroll. */
 @media (max-width: 34rem) { h1 { font-size: 8.4vw; letter-spacing: .14em; margin-right: -.14em; } }
 .tagline { font-size: clamp(1.05rem, 3vw, 1.2rem); color: var(--nav-ink); opacity: .9; max-width: 36rem; margin: 1.2rem auto 0; }
@@ -111,12 +116,57 @@ footer .wrap { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content
 footer nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 footer a { color: var(--nav-ink); }
 [hidden] { display: none !important; }
+
+/* ---- The hero's motion: the turning ring of realms ---- */
+.hero { position: relative; overflow: hidden; isolation: isolate; }
+.hero > .wrap { position: relative; z-index: 1; }
+.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+.ring { position: absolute; left: 50%; top: 50%; width: 80vw; aspect-ratio: 1; transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 0; opacity: .32; }
+.ring svg { width: 100%; height: 100%; display: block; animation: turn 260s linear infinite; }
+.ring.still svg { animation-play-state: paused; }
+@keyframes turn { to { transform: rotate(360deg); } }
+.ring .tick { stroke: var(--nav-muted); stroke-width: .3; stroke-linecap: butt; }
+/* The gold rings and the realm ticks share one solid, muted gold: no see-through, so the rings cover what's under them. */
+.ring { --rim: color-mix(in srgb, var(--gold) 55%, var(--nav)); }
+.ring .tick.realm, .ring .rim { stroke: var(--rim); stroke-width: .7; }
+.ring .rim { fill: none; }
+.ring .war { fill: none; stroke: #e2765f; stroke-width: .5; opacity: 0;
+  animation: var(--k, glow) var(--dur, 9s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; }
+.ring .peace { fill: none; stroke: var(--nav-muted); stroke-width: .4; stroke-dasharray: 3 4; opacity: 0;
+  animation: var(--k, glow) var(--dur, 13s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; --peak: .45; }
+/* Each war fades in and out on its own loop: two shapes (a plain swell; a swell that lingers at its height), a length,
+   an offset and an easing set per line in the script, so together they never visibly repeat. */
+@keyframes glow { from { opacity: 0; } to { opacity: var(--peak, .8); } }
+@keyframes linger { 0% { opacity: 0; } 55% { opacity: var(--peak, .8); } 100% { opacity: calc(var(--peak, .8) * .7); } }
+.ring.still .war, .ring.still .peace { animation-play-state: paused; }
+.hero .mark, .hero .tagline { text-shadow: 0 0 18px var(--nav), 0 0 2px var(--nav); }
+/* The hero's burnt edge: the navy runs on in a ragged line (edge.svg), over a scorch that glows gold where it
+   meets the navy and darkens to brown below (edge-char.svg). Both tile sideways and share one noise. */
+.burnt { position: relative; height: 0; z-index: 2; }
+.burnt::before, .burnt::after { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 34px; }
+.burnt::before { background: linear-gradient(to bottom, var(--gold) 0, var(--gold) 38%, #7a4a1c 55%, #3b2412 75%, transparent);
+  -webkit-mask: url(art/edge-char.svg) 0 0 / 600px 34px repeat-x; mask: url(art/edge-char.svg) 0 0 / 600px 34px repeat-x; opacity: .9; }
+.burnt::after { background: var(--nav); -webkit-mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; }
+
+/* Past the hero, the sticky bar darkens and casts a soft shadow, so it sits well over the paper. */
+.bar { transition: background-color .4s ease, box-shadow .4s ease; }
+.bar.past { background: color-mix(in srgb, var(--nav) 82%, #000); box-shadow: 0 6px 18px -10px rgba(0, 0, 0, .6); }
+
+/* A printer's mark before each section heading. */
+h2::before { content: "\2766"; font-variant-caps: normal; font-size: .8em; color: color-mix(in srgb, var(--gold) 75%, transparent); }
+/* No glow on the burnt heading: a text-shadow paints over its clipped-to-text gold, and a drop-shadow fills the holes. */
+.hero h1 { text-shadow: none; }
+@media (prefers-reduced-motion: reduce) { .ring svg { animation: none; } .ring .war, .ring .peace { animation: none; opacity: .45; } }
+/* IM Fell English comes in one weight: everything in it at that weight, never a faked bold. */
+h1, h2, .brand, .brand .banner, .mark .banner, .steps b { font-weight: 400; font-synthesis: none; }
 </style>
 </head>
 <body>
 <div class="bar">
   <div class="wrap">
-    <a class="brand" href="/"><span class="banner">Hegemoney:&nbsp;</span>Realmstate</a>
+    <a class="brand" href="/"><span class="banner">Hegemoney:&nbsp;</span>REALMSTATE</a>
     <nav aria-label="Site">
       <a href="https://wizard1146.github.io/realmstate-wiki/">Guide</a>
       <a href="https://github.com/wizard1146/realmstate-frontend">Front end</a>
@@ -124,7 +174,7 @@ footer a { color: var(--nav-ink); }
     </nav>
   </div>
 </div>
-<header class="hero">
+<header class="hero"><div class="ring" aria-hidden="true"><svg viewBox="-110 -110 220 220" id="ringsvg"></svg></div>
   <div class="wrap">
     <p class="eyebrow">Alpha test</p>
     <div class="mark"><span class="banner">Hegemoney:</span><h1>REALMSTATE</h1></div>
@@ -148,6 +198,7 @@ footer a { color: var(--nav-ink); }
     <div class="facts" id="facts" hidden></div>
   </div>
 </header>
+<div class="burnt" aria-hidden="true"></div>
 
 <main class="wrap">
   <section aria-labelledby="how-title">
@@ -194,6 +245,9 @@ const GAME = new URLSearchParams(location.search).get('game') || 'https://api.re
 const PLAY = 'https://play.realmstate.net';
 
 const $ = (id) => document.getElementById(id);
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// A countdown digit: set it (an option may animate the change).
+let put = (el, v) => { if (el.textContent !== String(v)) el.textContent = v; };
 const num = (n) => Number(n).toLocaleString();
 const pad = (n) => String(n).padStart(2, '0');
 let age = null, skew = 0, reachable = true;
@@ -219,10 +273,10 @@ function draw() {
   const over = age.ended || now >= end;
   const left = Math.max(0, (before ? age.started_at : end) - now);
   $('clock').hidden = over;
-  $('d').textContent = Math.floor(left / 86400000);
-  $('h').textContent = pad(Math.floor(left / 3600000) % 24);
-  $('m').textContent = pad(Math.floor(left / 60000) % 60);
-  $('s').textContent = pad(Math.floor(left / 1000) % 60);
+  put($('d'), Math.floor(left / 86400000));
+  put($('h'), pad(Math.floor(left / 3600000) % 24));
+  put($('m'), pad(Math.floor(left / 60000) % 60));
+  put($('s'), pad(Math.floor(left / 1000) % 60));
   const target = age.play_url && /^https?:/.test(age.play_url) ? age.play_url : PLAY;
   play.href = target;
   $('foot-play').href = target;
@@ -263,6 +317,7 @@ function drawFacts() {
   ];
   $('facts').innerHTML = facts.map(([b, s]) => `<div class="fact"><b>${b}</b><span>${s}</span></div>`).join('');
   $('facts').hidden = false;
+  if (window.afterFacts) afterFacts();
 }
 
 async function refresh() {
@@ -281,6 +336,56 @@ async function refresh() {
   draw();
   drawFacts();
 }
+
+
+// ---- The hero's motion ----
+const hero = document.querySelector('.hero');
+const live = { hero: true, page: !document.hidden };
+new IntersectionObserver(([e]) => { live.hero = e.isIntersecting; wake(); document.querySelector('.bar').classList.toggle('past', !e.isIntersecting); }).observe(hero);
+document.addEventListener('visibilitychange', () => { live.page = !document.hidden; wake(); });
+const running = () => live.hero && live.page && !REDUCE;
+const wakers = [];
+function wake() { wakers.forEach((f) => f(running())); }
+
+// The ring: 13 realms of 7 states; wars come and go as curved chords, ceasefires dashed.
+(() => {
+  const svg = $('ringsvg'), NS = 'http://www.w3.org/2000/svg', N = 91, R = 92;
+  const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const at = (i, r) => { const a = (i / N) * Math.PI * 2 - Math.PI / 2; return [Math.cos(a) * r, Math.sin(a) * r]; };
+  // Worn ticks: uneven in length, start and angle; some broken in two.
+  let wear = 91; const w = () => ((wear = (wear * 48271) % 2147483647) / 2147483647);
+  for (let i = 0; i < N; i++) {
+    const realm = i % 7 === 0, a = i + (w() - .5) * .35;
+    const from = w() < .8 ? R - 3 : R - 3 + .6 + w() * 2,   // most rest on the inner ring; a few sit off it
+       len = (realm ? 9 : 5) + w() * (realm ? 5 : 4) - (w() < .15 ? 3 : 0);
+    const segs = w() < .22 ? [[0, .35 + w() * .2], [.55 + w() * .2, 1]] : [[0, 1]];   // broken: a gap part-way
+    // Realm ticks match the gold rings exactly; the white ticks keep their uneven wear.
+    const fade = realm ? .55 + w() * .4 : .25 + w() * .45; if (realm) w();
+    const style = realm ? '' : `opacity:${fade.toFixed(2)}`;
+    for (const [s0, s1] of segs) {
+      const [x1, y1] = at(a, from + len * s0), [x2, y2] = at(a, from + len * s1);
+      svg.append(el('line', { class: 'tick' + (realm ? ' realm' : ''), x1, y1, x2, y2, style }));
+    }
+  }
+  const arcs = el('g', {}); svg.append(arcs);
+  // The gold rings last, so they sit above the ticks and the lines.
+  svg.append(el('circle', { class: 'rim', r: R - 3 }), el('circle', { class: 'rim', r: R + 11 }));
+  // A fixed pattern: wars (red) and ceasefires (dashed), each fading in and out on its own CSS loop.
+  let seed = 7; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const EASES = ['ease-in-out', 'cubic-bezier(.7,0,.3,1)', 'cubic-bezier(.2,.8,.2,1)', 'cubic-bezier(.9,.05,.6,.95)', 'cubic-bezier(.4,0,1,1)', 'cubic-bezier(0,0,.2,1)', 'linear'];
+  function chord(kind, n) {
+    const i = Math.floor(rand() * N), j = (i + 14 + Math.floor(rand() * 60)) % N;
+    const [x1, y1] = at(i, R - 4), [x2, y2] = at(j, R - 4), k = .12 + rand() * .3;
+    const p = el('path', { class: kind, d: `M${x1},${y1} Q${(x1 + x2) * k},${(y1 + y2) * k} ${x2},${y2}` });
+    const dur = (kind === 'war' ? 5 : 9) + rand() * (kind === 'war' ? 9 : 10);
+    p.style.cssText = `--k:${rand() < .4 ? 'linger' : 'glow'};--dur:${dur.toFixed(1)}s;--delay:${(-rand() * dur * 2).toFixed(1)}s;--ease:${EASES[n % EASES.length]};--peak:${(kind === 'war' ? .45 + rand() * .45 : .25 + rand() * .25).toFixed(2)}`;
+    arcs.append(p);
+  }
+  for (let n = 0; n < 11; n++) chord('war', n);
+  for (let n = 0; n < 5; n++) chord('peace', n + 3);
+  function go(on) { document.querySelector('.ring').classList.toggle('still', !on); }
+  wakers.push(go); go(running());
+})();
 
 refresh();
 setInterval(draw, 1000);
