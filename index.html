@@ -57,7 +57,7 @@ a { color: var(--blue); }
 /* The hero: the menu's navy, the wordmark large, as at the top of Straightline's menu. */
 .hero { background: var(--nav); color: var(--nav-ink); text-align: center; padding: clamp(2.8rem, 9vh, 5.5rem) 0 3rem;
   background-image: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%), url(art/hero-grain.svg);
-  background-attachment: scroll, fixed; }
+  background-attachment: scroll; }   /* not fixed: a fixed background repaints the whole hero on every scroll frame */
 .mark { display: inline-block; width: fit-content; margin: 0 auto; text-align: left; }
 .mark .banner { display: block; font: 600 clamp(1rem, 3.2vw, 1.35rem)/1.2 var(--head); letter-spacing: .04em; color: color-mix(in srgb, var(--nav-muted) 85%, var(--nav)); }
 .mark .banner::after { content: ""; display: block; width: calc(100% - .2em); height: 1px; margin: 6px 0 8px; background: color-mix(in srgb, var(--gold) 60%, transparent); }
@@ -125,31 +125,26 @@ footer a { color: var(--nav-ink); }
 
 .ring { position: absolute; left: 50%; top: 50%; width: 80vw; aspect-ratio: 1; transform: translate(-50%, -50%);
   pointer-events: none; z-index: 0; opacity: .32; }
-.ring svg { width: 100%; height: 100%; display: block; animation: turn 260s linear infinite; }
-.ring.still svg { animation-play-state: paused; }
+.ring .spin { position: relative; width: 100%; height: 100%; animation: turn 260s linear infinite; }
+.ring.still .spin { animation-play-state: paused; }
+/* The svg holds only what never changes (ticks, rims), so turning it costs no repaint; the wars and ceasefires fade
+   on the canvas beneath, redrawn a dozen times a second (a fading SVG part would repaint the whole ring each frame). */
+.ring svg, .ring canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @keyframes turn { to { transform: rotate(360deg); } }
 .ring .tick { stroke: var(--nav-muted); stroke-width: .3; stroke-linecap: butt; }
 /* The gold rings and the realm ticks share one solid, muted gold: no see-through, so the rings cover what's under them. */
 .ring { --rim: color-mix(in srgb, var(--gold) 55%, var(--nav)); }
 .ring .tick.realm, .ring .rim { stroke: var(--rim); stroke-width: .7; }
 .ring .rim { fill: none; }
-.ring .war { fill: none; stroke: #e2765f; stroke-width: .5; opacity: 0;
-  animation: var(--k, glow) var(--dur, 9s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; }
-.ring .peace { fill: none; stroke: var(--nav-muted); stroke-width: .4; stroke-dasharray: 3 4; opacity: 0;
-  animation: var(--k, glow) var(--dur, 13s) var(--ease, ease-in-out) var(--delay, 0s) infinite alternate both; --peak: .45; }
-/* Each war fades in and out on its own loop: two shapes (a plain swell; a swell that lingers at its height), a length,
-   an offset and an easing set per line in the script, so together they never visibly repeat. */
-@keyframes glow { from { opacity: 0; } to { opacity: var(--peak, .8); } }
-@keyframes linger { 0% { opacity: 0; } 55% { opacity: var(--peak, .8); } 100% { opacity: calc(var(--peak, .8) * .7); } }
-.ring.still .war, .ring.still .peace { animation-play-state: paused; }
 .hero .mark, .hero .tagline { text-shadow: 0 0 18px var(--nav), 0 0 2px var(--nav); }
-/* The hero's burnt edge (its grain fixed to the window, as the hero's is, so the two line up): the navy runs on in a ragged line (edge.svg), over a scorch that glows gold where it
-   meets the navy and darkens to brown below (edge-char.svg). Both tile sideways and share one noise. */
+/* The hero's burnt edge: the navy runs on in a ragged line (edge.svg), over a scorch that glows gold where it meets the
+   navy and darkens to brown below (edge-char.svg). Both tile sideways and share one noise. Its grain carries on from the
+   hero's, a hero's height further down the same tile (--hero-h, set by the script), so the two line up. */
 .burnt { position: relative; height: 0; z-index: 2; }
 .burnt::before, .burnt::after { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 34px; }
 .burnt::before { background: linear-gradient(to bottom, var(--gold) 0, var(--gold) 38%, #7a4a1c 55%, #3b2412 75%, transparent);
   -webkit-mask: url(art/edge-char.svg) 0 0 / 600px 34px repeat-x; mask: url(art/edge-char.svg) 0 0 / 600px 34px repeat-x; opacity: .9; }
-.burnt::after { background: url(art/hero-grain.svg) fixed, var(--nav); -webkit-mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; }
+.burnt::after { background: url(art/hero-grain.svg) 0 calc(1px - var(--hero-h, 0px)), var(--nav); -webkit-mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; mask: url(art/edge.svg) 0 0 / 600px 34px repeat-x; }
 
 /* Past the hero, the sticky bar darkens and casts a soft shadow, so it sits well over the paper. */
 .bar { transition: background-color .4s ease, box-shadow .4s ease; }
@@ -159,7 +154,7 @@ footer a { color: var(--nav-ink); }
 h2::before { content: "\2766"; font-variant-caps: normal; font-size: .8em; color: color-mix(in srgb, var(--gold) 75%, transparent); }
 /* No glow on the burnt heading: a text-shadow paints over its clipped-to-text gold, and a drop-shadow fills the holes. */
 .hero h1 { text-shadow: none; }
-@media (prefers-reduced-motion: reduce) { .ring svg { animation: none; } .ring .war, .ring .peace { animation: none; opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .ring .spin { animation: none; } }
 /* IM Fell English comes in one weight: everything in it at that weight, never a faked bold. */
 h1, h2, .brand, .brand .banner, .mark .banner, .steps b { font-weight: 400; font-synthesis: none; }
 </style>
@@ -175,7 +170,7 @@ h1, h2, .brand, .brand .banner, .mark .banner, .steps b { font-weight: 400; font
     </nav>
   </div>
 </div>
-<header class="hero"><div class="ring" aria-hidden="true"><svg viewBox="-110 -110 220 220" id="ringsvg"></svg></div>
+<header class="hero"><div class="ring" aria-hidden="true"><div class="spin"><canvas id="ringlines"></canvas><svg viewBox="-110 -110 220 220" id="ringsvg"></svg></div></div>
   <div class="wrap">
     <p class="eyebrow">Alpha test</p>
     <div class="mark"><span class="banner">Hegemoney:</span><h1>REALMSTATE</h1></div>
@@ -341,6 +336,10 @@ async function refresh() {
 
 // ---- The hero's motion ----
 const hero = document.querySelector('.hero');
+// The burnt edge's grain carries on from the hero's: it needs the hero's height (see .burnt::after).
+const heroHeight = () => document.documentElement.style.setProperty('--hero-h', `${hero.offsetHeight}px`);
+heroHeight();
+new ResizeObserver(heroHeight).observe(hero);
 const live = { hero: true, page: !document.hidden };
 new IntersectionObserver(([e]) => { live.hero = e.isIntersecting; wake(); document.querySelector('.bar').classList.toggle('past', !e.isIntersecting); }).observe(hero);
 document.addEventListener('visibilitychange', () => { live.page = !document.hidden; wake(); });
@@ -371,20 +370,64 @@ function wake() { wakers.forEach((f) => f(running())); }
   const arcs = el('g', {}); svg.append(arcs);
   // The gold rings last, so they sit above the ticks and the lines.
   svg.append(el('circle', { class: 'rim', r: R - 3 }), el('circle', { class: 'rim', r: R + 11 }));
-  // A fixed pattern: wars (red) and ceasefires (dashed), each fading in and out on its own CSS loop.
+  // A fixed pattern: wars (red) and ceasefires (dashed), each fading in and out on its own loop: two shapes (a plain
+  // swell; a swell that lingers at its height), a length, an offset and an easing per line, so together they never
+  // visibly repeat. Drawn on the canvas under the svg, as CSS animations of opacity would: alternate, each easing
+  // applied per keyframe step.
   let seed = 7; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  const EASES = ['ease-in-out', 'cubic-bezier(.7,0,.3,1)', 'cubic-bezier(.2,.8,.2,1)', 'cubic-bezier(.9,.05,.6,.95)', 'cubic-bezier(.4,0,1,1)', 'cubic-bezier(0,0,.2,1)', 'linear'];
+  /** CSS cubic-bezier(x1, y1, x2, y2) as a function of progress 0..1. */
+  const bezier = (x1, y1, x2, y2) => (t) => {
+    const at = (a, b, u) => 3 * a * u * (1 - u) ** 2 + 3 * b * u * u * (1 - u) + u ** 3;
+    let lo = 0, hi = 1, u = t;
+    for (let k = 0; k < 20; k++) { u = (lo + hi) / 2; if (at(x1, x2, u) < t) lo = u; else hi = u; }
+    return at(y1, y2, u);
+  };
+  const EASES = [bezier(.42, 0, .58, 1), bezier(.7, 0, .3, 1), bezier(.2, .8, .2, 1), bezier(.9, .05, .6, .95), bezier(.4, 0, 1, 1), bezier(0, 0, .2, 1), (t) => t];
+  const lines = [];
   function chord(kind, n) {
     const i = Math.floor(rand() * N), j = (i + 14 + Math.floor(rand() * 60)) % N;
     const [x1, y1] = at(i, R - 4), [x2, y2] = at(j, R - 4), k = .12 + rand() * .3;
-    const p = el('path', { class: kind, d: `M${x1},${y1} Q${(x1 + x2) * k},${(y1 + y2) * k} ${x2},${y2}` });
     const dur = (kind === 'war' ? 5 : 9) + rand() * (kind === 'war' ? 9 : 10);
-    p.style.cssText = `--k:${rand() < .4 ? 'linger' : 'glow'};--dur:${dur.toFixed(1)}s;--delay:${(-rand() * dur * 2).toFixed(1)}s;--ease:${EASES[n % EASES.length]};--peak:${(kind === 'war' ? .45 + rand() * .45 : .25 + rand() * .25).toFixed(2)}`;
-    arcs.append(p);
+    const linger = rand() < .4, delay = -rand() * dur * 2, ease = EASES[n % EASES.length];
+    const peak = kind === 'war' ? .45 + rand() * .45 : .25 + rand() * .25;
+    lines.push({ kind, x1, y1, cx: (x1 + x2) * k, cy: (y1 + y2) * k, x2, y2, dur, delay, ease, peak, linger });
   }
   for (let n = 0; n < 11; n++) chord('war', n);
   for (let n = 0; n < 5; n++) chord('peace', n + 3);
-  function go(on) { document.querySelector('.ring').classList.toggle('still', !on); }
+  /** A line's opacity at `s` seconds, as `animation: glow|linger dur ease delay infinite alternate both` gives it. */
+  function opacity(l, s) {
+    const p = (s - l.delay) / l.dur, it = Math.floor(p), t = it % 2 ? 1 - (p - it) : p - it;
+    if (!l.linger) return l.peak * l.ease(t);
+    return t < .55 ? l.peak * l.ease(t / .55) : l.peak + (l.peak * .7 - l.peak) * l.ease((t - .55) / .45);
+  }
+  const canvas = $('ringlines'), ctx = canvas.getContext('2d');
+  const muted = getComputedStyle(document.querySelector('.ring')).getPropertyValue('--nav-muted').trim() || '#9fadc2';
+  function paint(s) {
+    // One canvas pixel a CSS pixel: the ring is faint and soft, and a smaller canvas is cheaper to send each frame.
+    const size = Math.round(canvas.clientWidth);
+    if (!size) return;
+    if (canvas.width !== size) canvas.width = canvas.height = size;
+    const scale = size / 220;
+    ctx.setTransform(scale, 0, 0, scale, size / 2, size / 2);
+    ctx.clearRect(-110, -110, 220, 220);
+    for (const l of lines) {
+      ctx.globalAlpha = REDUCE ? .45 : Math.max(0, Math.min(1, opacity(l, s)));
+      ctx.strokeStyle = l.kind === 'war' ? '#e2765f' : muted;
+      ctx.lineWidth = l.kind === 'war' ? .5 : .4;
+      ctx.setLineDash(l.kind === 'war' ? [] : [3, 4]);
+      ctx.beginPath(); ctx.moveTo(l.x1, l.y1); ctx.quadraticCurveTo(l.cx, l.cy, l.x2, l.y2); ctx.stroke();
+    }
+  }
+  // A dozen frames a second: the fades take seconds, so more would look no different and cost more.
+  let timer = 0;
+  const t0 = performance.now();
+  function go(on) {
+    document.querySelector('.ring').classList.toggle('still', !on);
+    clearInterval(timer); timer = 0;
+    if (on) timer = setInterval(() => paint((performance.now() - t0) / 1000), 1000 / 12);
+  }
+  paint(0);
+  addEventListener('resize', () => paint((performance.now() - t0) / 1000));
   wakers.push(go); go(running());
 })();
 
